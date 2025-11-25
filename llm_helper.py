@@ -28,7 +28,6 @@ def call_llm_json(system_prompt: str, user_content: str):
     """
     text = call_llm(system_prompt, user_content)
     try:
-        # Try to extract JSON from the text (in case model adds extra text)
         start = text.find("{")
         if start == -1:
             start = text.find("[")
