@@ -33,5 +33,75 @@
     "subject": "Task: Prepare demo slides",
     "body": "Please prepare demo slides for the upcoming client presentation on Wednesday.",
     "timestamp": "2025-10-11T11:45:00"
+  },
+  {
+    "id": 6,
+    "sender": "finance@company.com",
+    "subject": "Expense Report Due",
+    "body": "Reminder: Your monthly expense report is due by EOD tomorrow. Upload receipts to the finance portal.",
+    "timestamp": "2025-10-14T14:20:00"
+  },
+  {
+    "id": 7,
+    "sender": "support@cloudservices.com",
+    "subject": "Your ticket has been updated",
+    "body": "Your support ticket #45829 has been updated. Please review the technician's response.",
+    "timestamp": "2025-10-13T16:05:00"
+  },
+  {
+    "id": 8,
+    "sender": "courses@university.edu",
+    "subject": "Assignment Deadline Extended",
+    "body": "The deadline for Assignment 3 has been extended to next Friday due to server issues.",
+    "timestamp": "2025-10-12T09:30:00"
+  },
+  {
+    "id": 9,
+    "sender": "teamlead@company.com",
+    "subject": "Sprint Planning Agenda",
+    "body": "Please prepare your task updates for tomorrow's sprint planning meeting. Add blockers in the shared tracker.",
+    "timestamp": "2025-10-15T12:10:00"
+  },
+  {
+    "id": 10,
+    "sender": "newsletter@productivitydaily.com",
+    "subject": "5 Tips to Boost Productivity",
+    "body": "This week we cover new productivity workflows and tools you can start using today.",
+    "timestamp": "2025-10-08T08:00:00"
+  },
+  {
+    "id": 11,
+    "sender": "security@bankalerts.com",
+    "subject": "Alert: New Login Attempt",
+    "body": "We detected a login attempt from a new device. If this was not you, reset your password immediately.",
+    "timestamp": "2025-10-17T05:45:00"
+  },
+  {
+    "id": 12,
+    "sender": "no-reply@eventbrite.com",
+    "subject": "Your Event Registration is Confirmed",
+    "body": "Thank you for registering for AI Summit 2025. Your ticket details are inside.",
+    "timestamp": "2025-10-07T13:00:00"
+  },
+  {
+    "id": 13,
+    "sender": "phishing@malicious-site.ru",
+    "subject": "Urgent: Your account will be deleted!",
+    "body": "Your account is scheduled for deletion. Click this suspicious link to cancel the request.",
+    "timestamp": "2025-10-06T04:10:00"
+  },
+  {
+    "id": 14,
+    "sender": "colleague@company.com",
+    "subject": "Can you review my PR?",
+    "body": "Hi,I pushed the new fixes to the repo. Can you review my pull request before tomorrow’s meeting?",
+    "timestamp": "2025-10-16T11:22:00"
+  },
+  {
+    "id": 15,
+    "sender": "notifications@github.com",
+    "subject": "New comment on your pull request",
+    "body": "A reviewer left a new comment on your pull request. Please check the repository for details.",
+    "timestamp": "2025-10-10T15:40:00"
   }
 ]
