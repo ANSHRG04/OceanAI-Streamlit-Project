@@ -379,10 +379,10 @@ with tab_drafts:
 st.markdown("---")
 st.write(
     "Instructions: Use the Prompt Brain to change how the agent reasons. "
-    "Use 'Process All Mock Emails' to run prompts over sample inbox. "
-    "Use Gmail integration to fetch real messages (requires `credentials.json`)."
 )
-# local assignment PDF path (uploaded file)
-st.markdown("[Assignment PDF](/mnt/data/Assignment - 2.pdf)")
-
-st.write("Do NOT commit `credentials.json`, `token.json`, or your `.env` to GitHub. See README for setup steps.")
+st.write(
+    "Use 'Process All Mock Emails' to run prompts over sample inbox. "
+)
+st.write(
+    "Use Gmail integration to fetch real messages."
+)
