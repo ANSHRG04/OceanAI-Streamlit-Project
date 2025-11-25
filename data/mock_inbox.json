@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "sender": "alice@company.com",
+    "subject": "Project X: Please review Q3 plan",
+    "body": "Hi, can you review the Q3 plan and share your feedback by Friday? The document is attached in the drive.",
+    "timestamp": "2025-10-15T10:12:00"
+  },
+  {
+    "id": 2,
+    "sender": "newsletter@technews.com",
+    "subject": "Your Weekly Tech Newsletter",
+    "body": "Welcome to this week's tech newsletter. We cover AI, cloud and more.",
+    "timestamp": "2025-10-10T09:00:00"
+  },
+  {
+    "id": 3,
+    "sender": "hr@company.com",
+    "subject": "1:1 Meeting Request",
+    "body": "Hi, can we schedule a 1:1 on Monday at 3 PM? Please confirm and propose an agenda.",
+    "timestamp": "2025-10-16T08:00:00"
+  },
+  {
+    "id": 4,
+    "sender": "spam@randomoffers.com",
+    "subject": "You won a free iPhone!!!",
+    "body": "Click here to claim your free iPhone. Limited time offer.",
+    "timestamp": "2025-10-09T06:30:00"
+  },
+  {
+    "id": 5,
+    "sender": "manager@company.com",
+    "subject": "Task: Prepare demo slides",
+    "body": "Please prepare demo slides for the upcoming client presentation on Wednesday.",
+    "timestamp": "2025-10-11T11:45:00"
+  }
+]

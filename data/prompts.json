@@ -1,0 +1,5 @@
+{
+  "categorization_prompt": "Categorize the following email into one of: Important, Newsletter, Spam, To-Do. To-Do emails must include a direct request requiring user action. Return JSON: { \"category\": \"...\", \"reason\": \"...\" }.",
+  "action_item_prompt": "Extract tasks from the email. Respond in JSON array format: [ { \"task\": \"...\", \"deadline\": \"YYYY-MM-DD or null\" } ]. If there are no tasks, return an empty array [].",
+  "auto_reply_prompt": "You are an assistant that drafts email replies. Use the user's tone: {tone}. Draft a reply to the email below. If it is a meeting request, confirm and ask for an agenda. Return JSON: { \"subject\": \"...\", \"body\": \"...\", \"suggested_followups\": [\"...\"] }."
+}
