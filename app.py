@@ -1,14 +1,11 @@
-# app.py
 import os
 from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
-# load .env so GEMINI_API_KEY (or other env vars) are available
 load_dotenv()
 
-# Import helper modules (must be in the same folder)
 from agent_logic import (
     load_inbox,
     load_prompts,
@@ -22,10 +19,8 @@ from agent_logic import (
 from gmail_client import gmail_authenticate
 from gmail_to_agent import fetch_and_process_gmail
 
-# ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Prompt-Driven Email Agent", layout="wide")
 
-# ---------- SESSION STATE INITIALIZATION ----------
 if "emails" not in st.session_state:
     try:
         st.session_state.emails = load_inbox()
@@ -51,12 +46,10 @@ if "drafts" not in st.session_state:
     except Exception:
         st.session_state.drafts = []
 
-# convenience local refs
 emails = st.session_state.emails
 prompts = st.session_state.prompts
 drafts = st.session_state.drafts
 
-# ---------- SIDEBAR (Controls & Gmail integration) ----------
 st.sidebar.title("Controls")
 
 if st.sidebar.button("Reload Mock Inbox"):
@@ -85,7 +78,6 @@ if st.sidebar.button("Connect Gmail & Authenticate (OAuth)"):
         except Exception as e:
             st.sidebar.error(f"Auth failed: {e}")
 
-# Processing mode toggle
 st.sidebar.markdown("### Processing mode")
 process_mode = st.sidebar.selectbox(
     "Choose how to process fetched Gmail messages:",
@@ -103,14 +95,13 @@ query = st.sidebar.text_input("Gmail query (e.g., is:unread -label:Processed)", 
 max_msgs = st.sidebar.number_input("Max messages to fetch", min_value=1, max_value=200, value=50)
 
 if st.sidebar.button("Fetch & Process Gmail"):
-    # map selection to function flags
     if process_mode == "LLM (real)":
         skip_processing = False
         simulate_processing = False
     elif process_mode == "Simulate (heuristic)":
         skip_processing = True
         simulate_processing = True
-    else:  # "Skip processing"
+    else:
         skip_processing = True
         simulate_processing = False
 
@@ -123,7 +114,6 @@ if st.sidebar.button("Fetch & Process Gmail"):
                 skip_processing=skip_processing,
                 simulate_processing=simulate_processing,
             )
-            # Merge: add processed at top and keep other messages not duplicated
             processed_ids = {p.get("id") for p in processed}
             st.session_state.emails = processed + [e for e in st.session_state.emails if e.get("id") not in processed_ids]
             emails = st.session_state.emails
@@ -134,24 +124,20 @@ if st.sidebar.button("Fetch & Process Gmail"):
 st.sidebar.markdown("---")
 st.sidebar.info("Prompts can be edited in the Prompt Brain tab. Drafts are saved locally and never sent automatically.")
 
-# ---------- MAIN UI TABS ----------
 tab_inbox, tab_prompt, tab_agent, tab_drafts = st.tabs(
     ["📥 Inbox", "🧠 Prompt Brain", "🤖 Email Agent", "✉️ Drafts"]
 )
 
-# ---------- TAB: INBOX ----------
 with tab_inbox:
     st.header("Inbox")
     if not st.session_state.emails:
         st.warning("No emails loaded. Use 'Reload Mock Inbox' or fetch from Gmail.")
     else:
-        # layout: left list, right detail
         left_col, right_col = st.columns([1, 2])
         with left_col:
             st.subheader("Email List")
-            # radio select shows id and subject
             email_ids = [e.get("id") for e in st.session_state.emails]
-            # provide consistent sort by timestamp if available
+
             def format_fn(i):
                 e = next((x for x in st.session_state.emails if x.get("id") == i), {})
                 subj = e.get("subject", "(no subject)")
@@ -172,11 +158,9 @@ with tab_inbox:
                 st.write(f"**Timestamp:** {selected_email.get('timestamp')}")
                 st.write(f"**Category:** `{selected_email.get('category', 'Not processed')}`")
 
-                # ---------- Clean Email Body Rendering (NO CODE BLOCKS) ----------
                 st.markdown("**Body:**")
                 body_info = selected_email.get("body") or {}
 
-                # Support both dict-based body and old string body
                 if isinstance(body_info, dict):
                     body_text = (body_info.get("text") or "") or ""
                     body_html = body_info.get("html", None)
@@ -184,23 +168,19 @@ with tab_inbox:
                     body_text = str(body_info or "")
                     body_html = None
 
-                # Clean body_text: remove leftover HTML tags or comments
                 def clean_text(raw: str) -> str:
                     if not raw:
                         return ""
-                    # Use BeautifulSoup to extract readable text if HTML fragments exist
                     soup = BeautifulSoup(raw, "html.parser")
                     for tag in soup(["script", "style"]):
                         tag.decompose()
                     text = soup.get_text(separator="\n")
-                    # collapse multiple blank lines and strip
                     lines = [ln.strip() for ln in text.splitlines()]
                     cleaned = "\n\n".join([ln for ln in lines if ln])
                     return cleaned
 
                 cleaned_text = clean_text(body_text)
 
-                # Toggle for HTML rendering (sanitized HTML is provided by gmail_client)
                 show_html = st.checkbox("Render formatted HTML (sanitized)", value=False)
 
                 if show_html and body_html:
@@ -212,15 +192,11 @@ with tab_inbox:
                     """
                     components.html(wrapped_html, height=500, scrolling=True)
                 else:
-                    # Show clean plain text as readable paragraphs using Markdown (no code block)
                     if cleaned_text.strip():
-                        # preserve paragraphs: replace single newline with two spaces + newline for Markdown line breaks
                         md = cleaned_text.replace("\r\n", "\n")
-                        # convert paragraph breaks to Markdown paragraph breaks
                         md = "\n\n".join([p.strip() for p in md.split("\n\n") if p.strip()])
                         st.markdown(md)
                     else:
-                        # If nothing in text, but html exists, show readable fallback from html
                         if body_html:
                             fallback = clean_text(body_html)
                             st.markdown(fallback if fallback else "_(no readable text)_")
@@ -228,7 +204,6 @@ with tab_inbox:
                             st.markdown("_(no message body)_")
 
                 st.markdown("**Category Reason:**")
-                # show category reason as plain text (no code)
                 reason = selected_email.get("category_reason", "")
                 if reason:
                     st.markdown(reason)
@@ -253,16 +228,13 @@ with tab_inbox:
                         else:
                             st.markdown(f"- **{i}.** {str(item)}")
 
-                # small quick actions for this email
                 st.markdown("---")
                 if st.button("Re-run processing for this email"):
                     with st.spinner("Running prompts on selected email..."):
                         updated = process_email(selected_email, st.session_state.prompts)
-                        # replace in session list
                         st.session_state.emails = [updated if e.get("id") == updated.get("id") else e for e in st.session_state.emails]
                         st.experimental_rerun()
 
-# ---------- TAB: PROMPT BRAIN ----------
 with tab_prompt:
     st.header("Prompt Brain (Edit & Save)")
     st.write("Edit the prompts that drive ALL LLM behavior. Changes apply when you re-run processing.")
@@ -286,7 +258,6 @@ with tab_prompt:
     st.markdown("---")
     st.write("Tip: Make small edits and re-run processing on a single email to see effect before processing entire inbox.")
 
-# ---------- TAB: EMAIL AGENT ----------
 with tab_agent:
     st.header("Email Agent (Summarize, Extract, Draft)")
 
@@ -342,7 +313,6 @@ with tab_agent:
                             st.markdown("**Suggested Follow-ups:**")
                             for f in reply.get("suggested_followups", []):
                                 st.markdown(f"- {f}")
-                            # save draft locally
                             draft_record = {
                                 "email_id": agent_email.get("id"),
                                 "original_subject": agent_email.get("subject"),
@@ -356,7 +326,6 @@ with tab_agent:
                         except Exception as e:
                             st.error(f"Drafting failed: {e}")
 
-# ---------- TAB: DRAFTS ----------
 with tab_drafts:
     st.header("Saved Drafts (local)")
     if not st.session_state.drafts:
@@ -375,14 +344,7 @@ with tab_drafts:
                     st.write(f"- {f}")
             st.markdown("---")
 
-# ---------- FOOTER / HELPFUL LINKS ----------
 st.markdown("---")
-st.write(
-    "Instructions: Use the Prompt Brain to change how the agent reasons. "
-)
-st.write(
-    "Use 'Process All Mock Emails' to run prompts over sample inbox. "
-)
-st.write(
-    "Use Gmail integration to fetch real messages."
-)
+st.write("Instructions: Use the Prompt Brain to change how the agent reasons. ")
+st.write("Use 'Process All Mock Emails' to run prompts over sample inbox. ")
+st.write("Use Gmail integration to fetch real messages.")
